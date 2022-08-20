@@ -1,0 +1,36 @@
+env:
+    SCRIPT_DIR: "/tmp/cirrus-ci-build"
+    CODENAME: chime
+    ROM: LineageOS
+    BRANCH: lineage-19.1
+    ROM_DIR: "$SCRIPT_DIR/$ROM"
+    RCLONE: "ENCRYPTED[b594a0c3f1d2e57b3780d1e7b4f6847ac0db65221e0de74dbdaca6dffcef2c3c0ded2a96dc8a8b7271db2885a4f1c482]"
+    TG_BOT_TOKEN: "ENCRYPTED[625ae991cfb18f209e9aa27122fee7115defe41a4da7a87533f24664874810378a8c421f3d99b44a766c9b93ae21dbf0]"
+    TG_CHANNEL_ID: "ENCRYPTED[b0c8911842a9c18ef9bca06c76c8f33db37033e05d98292a191fc3918ccc4b90d31fda82bc6a442d0735ff86cb81cfea]"
+
+task:
+  name: Building LineageOS
+  timeout_in: 120m
+  container:
+      image: inok2341/anu:latest
+      cpu: 8
+      memory: 32G
+
+  create-rom-folder_script: |
+       if ! [[ -d "$ROM_DIR" ]]; then
+           mkdir -p "$ROM_DIR"
+       else
+           echo "$ROM_DIR Already exists!"
+       fi
+
+  download-ccache_script:
+       - bash combo_ccache.sh
+
+  sync-rom_script:
+       - bash sync_rom.sh
+
+  sync-device_script:
+       - bash sync_device.sh
+
+  deploy-builder_script:
+       - bash build_start.sh
