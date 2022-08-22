@@ -6,11 +6,12 @@ source function_post.sh
 cd "$ROM_DIR"
 
 start=$(date +"%s")
-combo&msg info "Synchronize $ROM from $BRANCH branch..."
+combo_msg info "Synchronize $ROM from $BRANCH branch..."
 
-repo init -q --no-repo-verify --depth=1 -u "https://github.com/$ROM/android" -b "$BRANCH" -g default,-device,-mips,-darwin,-notdefault
+#repo init --no-repo-verify --depth=1 -u "https://github.com/$ROM/android" -b "$BRANCH" -g default,-device,-mips,-darwin,-notdefault
+repo init -u "https://github.com/$ROM/android.git" -b $BRANCH
 repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j$(nproc --all)
 
 end=$(date +"%s")
-start_end=$(($start - $end))
-combo&msg info "$ROM / $BRANCH Synchronized! Task took $(($start_end / 60)) minutes, $(($start_end % 60)) seconds."
+start_end=$(($end - $start))
+combo_msg info "$ROM / $BRANCH Synchronized! Task took $(($start_end / 60)) minutes, $(($start_end % 60)) seconds."

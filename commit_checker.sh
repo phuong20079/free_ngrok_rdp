@@ -10,7 +10,7 @@ case "$COMMIT_CHECK" in
         build_cmd()
         {
             brunch "$1"
-            sleep 105m
+            sleep 102m
             kill %
         }
     ;;
@@ -20,18 +20,18 @@ case "$COMMIT_CHECK" in
         {
             brunch "$1" 2>&1| "$ROM_DIR/build.log"
             telegram __file "$ROM_DIR/build.log"
-            TARGET="$(find $ROM_DIR/out/target/product/$CODENAME/lineage-*-UNOFFICIAL-$CODENAME.zip)"
+            TARGET="$(find $ROM_DIR/out/target/product/$CODENAME/lineage*UNOFFICIAL*$CODENAME.zip)"
             if ! [[ -e "$TARGET" ]]; then
-                combo&msg err "Build not found! Maybe something wrong above."
+                combo_msg err "File empty! Maybe something wrong above."
                 exit 1
             else
-                combo&msg info "Build founded! Pushing file to Google Drive..."
+                combo_msg info "Build founded! Pushing file to Google Drive..."
                 rclone copy "$TARGET" backup:backup -P
             fi
         }
     ;;
     *)
-        combo&msg info "Skip build! force ERROR!"
+        combo_msg info "Skip build! force ERROR!"
         exit 1
     ;;
 esac

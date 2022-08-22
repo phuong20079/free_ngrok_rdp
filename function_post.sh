@@ -2,7 +2,12 @@
 # Copyright (C) 2020 - 2022 Muhammad Fadlyas (fadlyas07)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+ROM_DIR="$SCRIPT_DIR/$ROM"
 COMMIT_CHECK=$(git log --pretty=format:"%s" -1)
+
+if ! [[ -d "$ROM_DIR" ]]; then
+    mkdir -p "$ROM_DIR"
+fi
 
 telegram()
 {
@@ -65,8 +70,8 @@ make()
     esac
 }
 
-combo&msg()
+combo_msg()
 {
     MSG_TEMPLATE="$2"
-    telegram __message $MSG_TEMPLATE && $1 $MSG_TEMPLATE
+    telegram __message "$MSG_TEMPLATE" && $1 "$MSG_TEMPLATE"
 }
