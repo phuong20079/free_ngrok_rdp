@@ -37,6 +37,8 @@ source build/envsetup.sh
 breakfast "$CODENAME"
 croot
 build_cmd "$CODENAME"
+cd "$SCRIPT_DIR"
+make __tar ccache "$SCRIPT_DIR/ccache" 1
 rclone copy "$SCRIPT_DIR/ccache.tar.gz" backup:backup -P
 end=$(date +"%s")
 start_end=$(($end - $start))
