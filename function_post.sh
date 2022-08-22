@@ -62,7 +62,7 @@ make()
 
     case "$ACTION" in
         __tar)
-            tar --use-compress-program="pigz -k -${4}" -cf ${NAME}.tar.gz "$EXTRA"
+            tar --use-compress-program="pigz -k -${EXTRA}" -cf ${NAME}.tar.gz "$NAME"
         ;;
         __zip)
             zip -r9q ${NAME}.zip "$EXTRA"

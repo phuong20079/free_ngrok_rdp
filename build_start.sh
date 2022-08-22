@@ -5,7 +5,7 @@
 source commit_checker.sh
 source function_post.sh
 cd "$ROM_DIR"
-combo_msg info "Task: ${A_MSG} wkwk"
+combo_msg info "Now ${A_MSG}"
 
 if ! [[ -d "$ROM_DIR/device/xiaomi/$CODENAME" ]]; then
     combo_msg err "Can't detect device tree folder, please check first!"
@@ -36,9 +36,9 @@ combo_msg info "Time to burn $ROM / $BRANCH mate!"
 source build/envsetup.sh
 breakfast "$CODENAME"
 croot
-build_cmd "$CODENAME"
+build_cmd
 cd "$SCRIPT_DIR"
-make __tar ccache "$SCRIPT_DIR/ccache" 1
+make __tar ccache 1
 rclone copy "$SCRIPT_DIR/ccache.tar.gz" backup:backup -P
 end=$(date +"%s")
 start_end=$(($end - $start))
