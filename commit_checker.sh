@@ -9,7 +9,7 @@ case "$COMMIT_CHECK" in
         A_MSG="Collecting cacche"
         build_cmd()
         {
-            brunch "$1"
+            brunch "$1" &
             sleep 102m
             kill %
         }
