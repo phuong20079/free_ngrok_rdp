@@ -8,7 +8,7 @@ cd "$ROM_DIR"
 start=$(date +"%s")
 combo_msg info "Synchronize $ROM from $BRANCH branch..."
 
-repo init --depth=1 -u "https://github.com/$ROM/android.git" -b "$BRANCH" -g default,-device,-mips,-darwin,-notdefault
+repo init --depth=1 -u "https://github.com/$ROM/android.git" -b "$BRANCH"
 repo sync -j$(nproc --all)
 
 end=$(date +"%s")
