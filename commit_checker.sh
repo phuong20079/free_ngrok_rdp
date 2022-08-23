@@ -10,7 +10,7 @@ case "$COMMIT_CHECK" in
         build_cmd()
         {
             brunch "$CODENAME" &
-            sleep 90m
+            sleep 80m
             kill %
         }
     ;;
