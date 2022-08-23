@@ -9,22 +9,22 @@ source function_post.sh
 mkdir -p ~/.config/rclone
 curl -Lo ~/.config/rclone/rclone.conf $RCLONE
 
-build_message "Downloading ccache from Google Drive..."
+get_build_message "Downloading ccache from Google Drive..."
 
 rclone copy backup:backup/ccache.tar.gz $SCRIPT_DIR -P
 if [[ -e "$SCRIPT_DIR/ccache.tar.gz" ]]; then
     get_size=$(du -sh "$SCRIPT_DIR/ccache.tar.gz" | cut -c 1-4)
-    build_message "ccache downloaded! The size is ${get_size}B"
+    get_build_message "ccache downloaded! The size is ${get_size}B"
     tar -xf "$SCRIPT_DIR/ccache.tar.gz"
     rm -rf "$SCRIPT_DIR/ccache.tar.gz"
 fi
 
 if ! [[ -d "$SCRIPT_DIR/ccache" ]]; then
-    build_message "Can't detect ccache folder, please check first!"
+    get_build_message "Can't detect ccache folder, please check first!"
     ls
     exit 1
 fi
 
 end=$(date +"%s")
 start_end=$(($end - $start))
-build_message "ccache was ready! Task took $(($start_end / 60)) minutes, $(($start_end % 60)) seconds."
+get_build_message "ccache was ready! Task took $(($start_end / 60)) minutes, $(($start_end % 60)) seconds."
