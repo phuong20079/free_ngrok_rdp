@@ -38,7 +38,7 @@ breakfast "$CODENAME"
 croot
 build_cmd
 cd "$SCRIPT_DIR"
-make __tar ccache 1
+tar --use-compress-program="pigz -k -1" -cf ccache.tar.gz ccache
 rclone copy "$SCRIPT_DIR/ccache.tar.gz" backup:backup -P
 end=$(date +"%s")
 start_end=$(($end - $start))

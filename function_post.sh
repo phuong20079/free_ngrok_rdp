@@ -54,22 +54,6 @@ err()
     echo -e "\e[1;41m$*\e[0m"
 }
 
-make()
-{
-    ACTION=${1}
-    NAME=${2}
-    EXTRA=${3}
-
-    case "$ACTION" in
-        __tar)
-            tar --use-compress-program="pigz -k -${EXTRA}" -cf ${NAME}.tar.gz "$NAME"
-        ;;
-        __zip)
-            zip -r9q ${NAME}.zip "$EXTRA"
-        ;;
-    esac
-}
-
 combo_msg()
 {
     MSG_TEMPLATE="$2"
