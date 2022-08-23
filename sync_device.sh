@@ -14,4 +14,4 @@ git clone -j$(nproc --all) -b main https://github.com/greenforce-project/kernel_
 
 end=$(date +"%s")
 start_end=$(($end - $start))
-combo_msg info "OK device, kernel and vendor tree cloned! Task took $(($start_end / 60)) minutes, $(($start_end % 60)) seconds."
+combo_msg info "OK! device, kernel and vendor tree cloned! Task took $(($start_end / 60)) minutes, $(($start_end % 60)) seconds."

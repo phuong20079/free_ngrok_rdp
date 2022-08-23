@@ -37,8 +37,9 @@ source build/envsetup.sh
 breakfast "$CODENAME"
 croot
 build_cmd
-cd "$SCRIPT_DIR"
-tar --use-compress-program="pigz -k -1" -cf ccache.tar.gz ccache
+cd "$CCACHE_DIR"
+tar -czvf ../"ccache.tar.gz" *
+cd ..
 rclone copy "$SCRIPT_DIR/ccache.tar.gz" backup:backup -P
 end=$(date +"%s")
 start_end=$(($end - $start))

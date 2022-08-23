@@ -63,12 +63,13 @@ combo_msg()
 get_build_message()
 {
     get_distro_name=$(source /etc/os-release && echo ${PRETTY_NAME})
-    post_template=$(echo -e "
-    <b>====== Starting Build $ROM O-o-O ======</b>
-    <b>Branch:</b> <code>${BRANCH}</code>
-    <b>Device:</b> <code>${CODENAME}</code>
-    <b>Type:</b> <code>${A_MSG}</code>
-    <b>Job:</b> <code>$(nproc --all) Paralel processing</code>
-    <b>Running on:</b> <code>$get_distro_name</code>
-    <b>============== O-o-O ==============</b>")
+    post_template="
+
+<b>====== Starting Build $ROM ======</b>
+<b>Branch:</b> <code>${BRANCH}</code>
+<b>Device:</b> <code>${CODENAME}</code>
+<b>Type:</b> <code>${A_MSG}</code>
+<b>Job:</b> <code>$(nproc --all) Paralel processing</code>
+<b>Running on:</b> <code>$get_distro_name</code>
+<b>============== O-o-O ==============</b>"
 }
