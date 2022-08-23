@@ -32,8 +32,14 @@ ccache -z
 start=$(date +"%s")
 
 source build/envsetup.sh
+get_build_message "breakfast "$CODENAME""
 breakfast "$CODENAME"
 croot
+mkfifo reading
+tee "${BUILDLOG}" < reading &
+sleep 2
+get_build_message "🛠️ Building..."
+progress &
 build_cmd
 tar -czf "ccache.tar.gz" "$CCACHE_DIR"
 rclone copy "$SCRIPT_DIR/ccache.tar.gz" backup:backup -P

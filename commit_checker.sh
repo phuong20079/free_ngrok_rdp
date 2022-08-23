@@ -9,8 +9,8 @@ case "$COMMIT_CHECK" in
         A_MSG="Collecting cacche"
         build_cmd()
         {
-            brunch "$CODENAME" &
-            sleep 80m
+            brunch "$CODENAME" > reading &
+            sleep 85m
             kill %
         }
     ;;
