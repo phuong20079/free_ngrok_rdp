@@ -5,20 +5,19 @@
 source commit_checker.sh
 source function_post.sh
 cd "$ROM_DIR"
-get_build_message
 
 if ! [[ -d "$ROM_DIR/device/xiaomi/$CODENAME" ]]; then
-    combo_msg err "Can't detect device tree folder, please check first!"
+    build_message "Can't detect device tree folder, please check first!"
     exit 1
 fi
 
 if ! [[ -d "$ROM_DIR/vendor/xiaomi/$CODENAME" ]]; then
-    combo_msg err "Can't detect vendor tree folder, please check first!"
+    build_message "Can't detect vendor tree folder, please check first!"
     exit 1
 fi
 
 if ! [[ -d "$ROM_DIR/kernel/xiaomi/$CODENAME" ]]; then
-    combo_msg err "Can't detect kernel tree folder, please check first!"
+    build_message "Can't detect kernel tree folder, please check first!"
     exit 1
 fi
 
@@ -31,7 +30,6 @@ ccache -o compression=true
 ccache -z
 
 start=$(date +"%s")
-combo_msg info "$post_template"
 
 source build/envsetup.sh
 breakfast "$CODENAME"
@@ -41,4 +39,4 @@ tar -czf "ccache.tar.gz" "$CCACHE_DIR"
 rclone copy "$SCRIPT_DIR/ccache.tar.gz" backup:backup -P
 end=$(date +"%s")
 start_end=$(($end - $start))
-combo_msg info "$A_MSG finished! Task took $(($start_end / 60)) minutes, $(($start_end % 60)) seconds."
+build_message "$A_MSG finished! Task took $(($start_end / 60)) minutes, $(($start_end % 60)) seconds."

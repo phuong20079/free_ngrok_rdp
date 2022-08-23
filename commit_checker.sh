@@ -22,16 +22,16 @@ case "$COMMIT_CHECK" in
             telegram __file "$ROM_DIR/build.log"
             TARGET="$(find $ROM_DIR/out/target/product/$CODENAME/lineage*UNOFFICIAL*$CODENAME.zip)"
             if ! [[ -e "$TARGET" ]]; then
-                combo_msg err "File empty! Maybe something wrong above."
+                build_message "File empty! Maybe something wrong above."
                 exit 1
             else
-                combo_msg info "Build founded! Pushing file to Google Drive..."
+                build_message "Build founded! Pushing file to Google Drive..."
                 rclone copy "$TARGET" backup:backup -P
             fi
         }
     ;;
     *)
-        combo_msg info "Skip build! force ERROR!"
+        build_message "Skip build! force ERROR!"
         exit 1
     ;;
 esac

@@ -44,6 +44,80 @@ telegram()
     esac
 }
 
+telegram_curl()
+{
+	local ACTION=${1}
+	shift
+	local HTTP_REQUEST=${1}
+	shift
+	if [ "$HTTP_REQUEST" != "POST_FILE" ]; then
+		curl -s -X $HTTP_REQUEST "https://api.telegram.org/bot$TG_BOT_TOKEN/$ACTION" "$@" | jq .
+	else
+		curl -s "https://api.telegram.org/bot$TG_BOT_TOKEN/$ACTION" "$@" | jq .
+	fi
+}
+
+telegram_main()
+{
+	local ACTION=${1}
+	local HTTP_REQUEST=${2}
+	local CURL_ARGUMENTS=()
+	while [ "${#}" -gt 0 ]; do
+		case "${1}" in
+			--animation | --audio | --document | --photo | --video )
+				local CURL_ARGUMENTS+=(-F $(echo "${1}" | sed 's/--//')=@"${2}")
+				shift
+				;;
+			--* )
+				if [ "$HTTP_REQUEST" != "POST_FILE" ]; then
+					local CURL_ARGUMENTS+=(-d $(echo "${1}" | sed 's/--//')="${2}")
+				else
+					local CURL_ARGUMENTS+=(-F $(echo "${1}" | sed 's/--//')="${2}")
+				fi
+				shift
+				;;
+		esac
+		shift
+	done
+	telegram_curl "$ACTION" "$HTTP_REQUEST" "${CURL_ARGUMENTS[@]}"
+}
+
+telegram_curl_get()
+{
+	local ACTION=${1}
+	shift
+	telegram_main "$ACTION" GET "$@"
+}
+
+telegram_curl_post()
+{
+	local ACTION=${1}
+	shift
+	telegram_main "$ACTION" POST "$@"
+}
+
+telegram_curl_post_file()
+{
+	local ACTION=${1}
+	shift
+	telegram_main "$ACTION" POST_FILE "$@"
+}
+
+tg_send_message()
+{
+	telegram_main sendMessage POST "$@"
+}
+
+tg_edit_message_text()
+{
+	telegram_main editMessageText POST "$@"
+}
+
+tg_send_document()
+{
+	telegram_main sendDocument POST_FILE "$@"
+}
+
 info()
 {
     echo -e "\e[1;32m$*\e[0m"
@@ -63,13 +137,23 @@ combo_msg()
 get_build_message()
 {
     get_distro_name=$(source /etc/os-release && echo ${PRETTY_NAME})
-    post_template="
-
-<b>====== Starting Build $ROM ======</b>
+    if [ "$CI_MESSAGE_ID" = "" ]; then
+CI_MESSAGE_ID=$(tg_send_message --chat_id "$TG_CHANNEL_ID" --text "<b>====== Starting Build $ROM ======</b>
 <b>Branch:</b> <code>${BRANCH}</code>
 <b>Device:</b> <code>${CODENAME}</code>
 <b>Type:</b> <code>${A_MSG}</code>
 <b>Job:</b> <code>$(nproc --all) Paralel processing</code>
 <b>Running on:</b> <code>$get_distro_name</code>
-<b>============== O-o-O ==============</b>"
+
+<b>Status:</b> $1" --parse_mode "html" | jq .result.message_id)
+    else
+tg_edit_message_text --chat_id "$TG_CHANNEL_ID" --message_id "$CI_MESSAGE_ID" --text "<b>====== Starting Build $ROM ======</b>
+<b>Branch:</b> <code>${BRANCH}</code>
+<b>Device:</b> <code>${CODENAME}</code>
+<b>Type:</b> <code>${A_MSG}</code>
+<b>Job:</b> <code>$(nproc --all) Paralel processing</code>
+<b>Running on:</b> <code>$get_distro_name</code>
+
+<b>Status:</b> $1" --parse_mode "html"
+    fi
 }
