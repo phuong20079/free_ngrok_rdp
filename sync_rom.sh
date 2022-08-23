@@ -8,7 +8,7 @@ cd "$ROM_DIR"
 start=$(date +"%s")
 get_build_message "Synchronize $ROM from $BRANCH branch..."
 
-repo init --depth=1 -u "https://github.com/$ROM/android.git" -b "$BRANCH" && \
+repo init -u "https://github.com/$ROM/android.git" -b "$BRANCH"
 repo sync -j$(nproc --all) 2>&1| tee "$ROM_DIR/sync.log"
 
 end=$(date +"%s")
