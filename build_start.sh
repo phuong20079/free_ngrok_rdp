@@ -5,7 +5,7 @@
 source commit_checker.sh
 source function_post.sh
 cd "$ROM_DIR"
-combo_msg info "Now ${A_MSG}"
+get_build_message
 
 if ! [[ -d "$ROM_DIR/device/xiaomi/$CODENAME" ]]; then
     combo_msg err "Can't detect device tree folder, please check first!"
@@ -31,7 +31,7 @@ ccache -o compression=true
 ccache -z
 
 start=$(date +"%s")
-combo_msg info "Time to burn $ROM / $BRANCH mate!"
+combo_msg info "$post_template"
 
 source build/envsetup.sh
 breakfast "$CODENAME"
