@@ -62,7 +62,7 @@ telegram_main()
 	local ACTION=${1}
 	local HTTP_REQUEST=${2}
 	local CURL_ARGUMENTS=()
-	while [ "${#}" -gt 0 ]; do
+	while [[ "${#}" -gt 0 ]]; do
 		case "${1}" in
 			--animation | --audio | --document | --photo | --video )
 				local CURL_ARGUMENTS+=(-F $(echo "${1}" | sed 's/--//')=@"${2}")
@@ -145,7 +145,7 @@ build_message()
 <b>Type:</b> <code>${A_MSG}</code>
 <b>Job:</b> <code>$(nproc --all) Paralel processing</code>
 <b>Running on:</b> <code>$get_distro_name</code>
-============= O-o-O =============" --parse_mode "html"
+<b>============= O-o-O =============</b>" --parse_mode "html"
 }
 
 get_build_message()
@@ -155,38 +155,31 @@ get_build_message()
 <b>Task:</b> <code>$1</code>
 <b>Status:</b> <code>$2</code>" --parse_mode "html" | jq .result.message_id)
     else
-        tg_edit_message_text --chat_id "$TG_CHANNEL_ID" --message_id "$CI_MESSAGE_ID" \
-        --text "<b>Status:</b> $1" --parse_mode "html"
+        tg_edit_message_text --chat_id "$TG_CHANNEL_ID" --message_id "$CI_MESSAGE_ID" --text "
+<b>Task:</b> <code>$1</code>
+<b>Status:</b> <code>$2</code>" --parse_mode "html"
     fi
 }
 
 progress()
 {
-    echo "BOTLOG: Build tracker process is running..."
-    sleep 10;
-
+    info "BOTLOG: Build tracker process is running..."
     while [ 1 ]; do
-
-        # Get latest percentage
         PERCENTAGE=$(cat $BUILDLOG | tail -n 1 | awk '{ print $2 }')
         NUMBER=$(echo ${PERCENTAGE} | sed 's/[^0-9]*//g')
-
-        # Report percentage to the $CHAT_ID
         if [ "${NUMBER}" != "" ]; then
             if [ "${NUMBER}" -le  "99" ]; then
                 if [ "${NUMBER}" != "${NUMBER_OLD}" ] && [ "$NUMBER" != "" ] && ! cat $BUILDLOG | tail  -n 1 | grep "glob" > /dev/null && ! cat $BUILDLOG | tail  -n 1 | grep "including" > /dev/null && ! cat $BUILDLOG | tail  -n 1 | grep "soong" > /dev/null && ! cat $BUILDLOG | tail  -n 1 | grep "finishing" > /dev/null; then
                 echo -e "BOTLOG: Percentage changed to ${NUMBER}%"
-                    get_build_message "🛠️ Building... ${NUMBER}%" > /dev/null
+                    get_build_message "Build $ROM" "🛠️ Building... ${NUMBER}%" > /dev/null
                 fi
             l=${NUMBER}
             fi
             if [ "$NUMBER" -eq "99" ] && [ "$NUMBER" != "" ] && ! cat $BUILDLOG | tail  -n 1 | grep "glob" > /dev/null && ! cat $BUILDLOG | tail  -n 1 | grep "including" > /dev/null && ! cat $BUILDLOG | tail  -n 1 | grep "soong" > /dev/null && ! cat $BUILDLOG | tail -n 1 | grep "finishing" > /dev/null; then
-                echo "BOTLOG: Build tracker process ended"
+                info "BOTLOG: Build tracker process ended"
                 break
             fi
         fi
-
-        sleep 10
     done
     return 0
 }
