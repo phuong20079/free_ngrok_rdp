@@ -137,21 +137,23 @@ combo_msg()
 build_message()
 {
     get_distro_name=$(source /etc/os-release && echo ${PRETTY_NAME})
+
     tg_send_message --chat_id "$TG_CHANNEL_ID" --text "
 <b>====== Starting Build $ROM ======</b>
 <b>Branch:</b> <code>${BRANCH}</code>
 <b>Device:</b> <code>${CODENAME}</code>
 <b>Type:</b> <code>${A_MSG}</code>
 <b>Job:</b> <code>$(nproc --all) Paralel processing</code>
-<b>Running on:</b> <code>$get_distro_name</code>" --parse_mode "html"
+<b>Running on:</b> <code>$get_distro_name</code>
+============= O-o-O =============" --parse_mode "html"
 }
 
 get_build_message()
 {
-    get_distro_name=$(source /etc/os-release && echo ${PRETTY_NAME})
-    if [ "$CI_MESSAGE_ID" = "" ]; then
-        CI_MESSAGE_ID=$(tg_send_message --chat_id "$TG_CHANNEL_ID" \
-                        --text "<b>Status:</b> $1" --parse_mode "html" | jq .result.message_id)
+    if [[ "$CI_MESSAGE_ID" == "" ]]; then
+        CI_MESSAGE_ID=$(tg_send_message --chat_id "$TG_CHANNEL_ID" --text "
+<b>Task:</b> <code>$1</code>
+<b>Status:</b> <code>$2</code>" --parse_mode "html" | jq .result.message_id)
     else
         tg_edit_message_text --chat_id "$TG_CHANNEL_ID" --message_id "$CI_MESSAGE_ID" \
         --text "<b>Status:</b> $1" --parse_mode "html"
