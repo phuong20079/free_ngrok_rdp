@@ -134,33 +134,32 @@ combo_msg()
     telegram __message "$MSG_TEMPLATE" && $1 "$MSG_TEMPLATE"
 }
 
+build_message()
+{
+    get_distro_name=$(source /etc/os-release && echo ${PRETTY_NAME})
+    tg_send_message --chat_id "$TG_CHANNEL_ID" --text "
+<b>====== Starting Build $ROM ======</b>
+<b>Branch:</b> <code>${BRANCH}</code>
+<b>Device:</b> <code>${CODENAME}</code>
+<b>Type:</b> <code>${A_MSG}</code>
+<b>Job:</b> <code>$(nproc --all) Paralel processing</code>
+<b>Running on:</b> <code>$get_distro_name</code>" --parse_mode "html"
+}
+
 get_build_message()
 {
     get_distro_name=$(source /etc/os-release && echo ${PRETTY_NAME})
     if [ "$CI_MESSAGE_ID" = "" ]; then
-CI_MESSAGE_ID=$(tg_send_message --chat_id "$TG_CHANNEL_ID" --text "<b>====== Starting Build $ROM ======</b>
-<b>Branch:</b> <code>${BRANCH}</code>
-<b>Device:</b> <code>${CODENAME}</code>
-<b>Type:</b> <code>${A_MSG}</code>
-<b>Job:</b> <code>$(nproc --all) Paralel processing</code>
-<b>Running on:</b> <code>$get_distro_name</code>
-
-<b>Status:</b> $1" --parse_mode "html" | jq .result.message_id)
+        CI_MESSAGE_ID=$(tg_send_message --chat_id "$TG_CHANNEL_ID" \
+                        --text "<b>Status:</b> $1" --parse_mode "html" | jq .result.message_id)
     else
-tg_edit_message_text --chat_id "$TG_CHANNEL_ID" --message_id "$CI_MESSAGE_ID" --text "<b>====== Starting Build $ROM ======</b>
-<b>Branch:</b> <code>${BRANCH}</code>
-<b>Device:</b> <code>${CODENAME}</code>
-<b>Type:</b> <code>${A_MSG}</code>
-<b>Job:</b> <code>$(nproc --all) Paralel processing</code>
-<b>Running on:</b> <code>$get_distro_name</code>
-
-<b>Status:</b> $1" --parse_mode "html"
+        tg_edit_message_text --chat_id "$TG_CHANNEL_ID" --message_id "$CI_MESSAGE_ID" \
+        --text "<b>Status:</b> $1" --parse_mode "html"
     fi
 }
 
 progress()
 {
-    BUILDLOG="$ROM_DIR/build.log"
     echo "BOTLOG: Build tracker process is running..."
     sleep 10;
 

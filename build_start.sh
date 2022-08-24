@@ -31,6 +31,8 @@ ccache -z
 
 start=$(date +"%s")
 
+BUILDLOG="$ROM_DIR/build.log"
+build_message
 source build/envsetup.sh
 get_build_message "breakfast "$CODENAME""
 breakfast "$CODENAME"
