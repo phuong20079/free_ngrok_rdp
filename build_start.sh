@@ -43,7 +43,7 @@ sleep 2
 get_build_message "Building $ROM" "🛠️ Building..."
 progress &
 build_cmd
-tar -czf "ccache.tar.gz" "$CCACHE_DIR"
+tar --use-compress-program="pigz -k -1" -cf ccache.tar.gz ccache
 rclone copy "$SCRIPT_DIR/ccache.tar.gz" backup:backup -P
 end=$(date +"%s")
 start_end=$(($end - $start))
